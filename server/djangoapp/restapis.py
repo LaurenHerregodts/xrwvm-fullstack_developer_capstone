@@ -17,7 +17,7 @@ def get_request(endpoint, **kwargs):
     params = ""
     if (kwargs):
         for key, value in kwargs.items():
-            params=params + key + "= " + value + "&"
+            params= params + key + "= " + value + "&"
 
     request_url = backend_url + endpoint + "?" + params
 
@@ -28,6 +28,7 @@ def get_request(endpoint, **kwargs):
         return response.json()
     except:
         # If any error occurs
+        print(f"Unexpected {err=}, {type(err)=}")
         print("Network exception occurred")
 
 
