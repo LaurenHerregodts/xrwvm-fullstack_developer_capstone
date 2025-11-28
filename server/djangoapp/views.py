@@ -45,7 +45,6 @@ def logout_request(request):
 # Create a `registration` view to handle sign up request
 @csrf_exempt
 def registration(request):
-    context = {}
 
     # Load JSON data from the request body
     data = json.loads(request.body)
@@ -55,14 +54,13 @@ def registration(request):
     last_name = data['lastName']
     email = data['email']
     username_exist = False
-    email_exist = False
     try:
         # Check if user already exists
         User.objects.get(username=username)
         username_exist = True
-    except:
+    except Exception as err:
         # If not, simply log this is a new user
-        logger.debug("{} is new user".format(username))
+        logger.debug(f"{err}: {username} is new user")
 
     # If it is a new user
     if not username_exist:
@@ -100,7 +98,6 @@ def get_cars(request):
     return JsonResponse({"CarModels": cars})
 
 
-# Update the `get_dealerships` render list of dealerships all by default, particular state if state is passed
 def get_dealerships(request, state="All"):
     if (state == "All"):
         endpoint = "/fetchDealers"
@@ -139,11 +136,11 @@ def add_review(request):
         data = json.loads(request.body)
         try:
             response = post_review(data)
-            return JsonResponse({"status": 200})
+            return JsonResponse({"status": 200, "response": response})
         except Exception as e:
             return JsonResponse(
                 {"status": 401,
-                 "message": f"Error in posting review: {e=}"
+                 "message": f"Error in posting review: {e}"
                 }
             )
     else:
